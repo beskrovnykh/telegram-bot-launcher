@@ -7,7 +7,6 @@ import json
 import signal
 import urllib.request
 
-
 from ngrok_wrapper import start_ngrok
 from ngrok_wrapper import stop_ngrok
 from ngrok_wrapper import check_ngrok_installed
@@ -24,11 +23,11 @@ def get_bot_token_from_config(stage="local"):
         str: The bot token for the specified stage.
     """
     config_path = '.chalice/config.json'
-    
+
     # Check if the configuration file exists
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Chalice configuration file '{config_path}' not found.")
-    
+
     with open(config_path, 'r') as f:
         try:
             config = json.load(f)
@@ -64,11 +63,11 @@ def set_telegram_webhook(telegram_bot_id, webhook_url):
     data = json.dumps({"url": webhook_url}).encode('utf-8')
     headers = {
         "Content-Type": "application/json",
-        "User-Agent": "Python-urllib/3.x" # Some services block requests without User-Agent, so we add it
+        "User-Agent": "Python-urllib/3.x"  # Some services block requests without User-Agent, so we add it
     }
 
     request = urllib.request.Request(url, data=data, headers=headers, method="POST")
-    
+
     try:
         with urllib.request.urlopen(request) as response:
             response_data = json.loads(response.read().decode())
@@ -78,15 +77,15 @@ def set_telegram_webhook(telegram_bot_id, webhook_url):
                 print("Webhook successfully set!")
             else:
                 print(f"Failed to set webhook. Error: {response_data.get('description')}")
-                
+
             return response_data
     except urllib.error.HTTPError as e:
         print(f"HTTP Error: {e.code} {e.reason}")
     except urllib.error.URLError as e:
         print(f"URL Error: {e.reason}")
 
-def launch_bot(port, stage, venv_path, no_autoreload):
 
+def launch_bot(port, stage, venv_path, no_autoreload):
     """
     Launches the bot locally using ngrok to handle webhooks from Telegram.
 
@@ -96,12 +95,11 @@ def launch_bot(port, stage, venv_path, no_autoreload):
     :param no_autoreload: If True, the Chalice server will not automatically reload on code changes.
     """
 
-
     def stop_server(signum, frame):
         if server_process:
             stop_ngrok()
             server_process.terminate()
-    
+
     signal.signal(signal.SIGINT, stop_server)
     signal.signal(signal.SIGTERM, stop_server)
     # Start ngrok

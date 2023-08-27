@@ -30,6 +30,7 @@ def get_ngrok_url():
         print(f"Error getting ngrok URL: {e}")
         return None
 
+
 def start_ngrok(port):
     """
     Start ngrok for the given port.
@@ -42,6 +43,7 @@ def start_ngrok(port):
     time.sleep(5)
     return get_ngrok_url()
 
+
 def stop_ngrok():
     global ngrok_process
     if ngrok_process:
@@ -49,10 +51,12 @@ def stop_ngrok():
         ngrok_process = None
     print("Ngrok stopped.")
 
+
 if __name__ == "__main__":
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Manage ngrok process.")
-    parser.add_argument('action', choices=['start', 'stop', 'get-url'], help="Action to perform: start, stop, or retrieve ngrok URL.")
+    parser.add_argument('action', choices=['start', 'stop', 'get-url'],
+                        help="Action to perform: start, stop, or retrieve ngrok URL.")
     parser.add_argument('--port', type=int, default=8000, help="The port on which the Chalice app is running.")
     args = parser.parse_args()
 

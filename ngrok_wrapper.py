@@ -4,7 +4,7 @@ import json
 import time
 import argparse
 
-ngrok_process = None  # глобальная переменная для хранения экземпляра процесса ngrok
+ngrok_process = None  # Global variable to store the ngrok process instance
 
 
 def check_ngrok_installed():

@@ -16,10 +16,17 @@
     aws_secret_access_key=YOUR_EVEN_MORE_SECRET_KEY
     region=YOUR_PREFERRED_REGION
     ```
+    Replace the placeholders with your actual AWS credentials.
+  
+### 2. Export the Project's Bin Directory to PATH
+```bash
+export PATH=$PATH:/path/to/your/project/bin
+```
+Replace `/path/to/your/project` with the actual path to the project on your machine.
 
-Replace the placeholders with your actual AWS credentials.
 
-### 2. Generating a New Project on Your Laptop 💻
+
+### 3. Generating a New Project on Your Laptop 💻
 
 Unleash your next big spy gadget (project) using:
 
@@ -29,7 +36,7 @@ setup_project.sh "agent-007" "<TELEGRAM_BOT_TOKEN>" --dependencies <DEPENDENCY_1
 
 Once your gadget is set up, 🕵️‍♂️ rendezvous with your bot on Telegram.
 
-### 3. Running the Bot Locally 🏠
+### 4. Running the Bot Locally 🏠
 
 Ignite your local agent with:
 
@@ -39,7 +46,7 @@ run_bot.sh --no-autoreload
 
 Once it's up, proceed to add or refine your bot's business logic as required.
 
-### 4. Deploying the Bot for Your Next Mission 🌍
+### 5. Deploying the Bot for Your Next Mission 🌍
 
 Before you go live, double-check the blueprints (Chalice settings) for the `TELEGRAM_BOT_ID` parameter. Don't get caught off-guard!
 

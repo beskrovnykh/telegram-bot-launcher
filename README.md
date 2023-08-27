@@ -33,8 +33,7 @@ Unleash your next big spy gadget (project) using:
 ```bash
 setup_project.sh "agent-007" "<TELEGRAM_BOT_TOKEN>" --dependencies <DEPENDENCY_1> <DEPENDENCY_2> ...
 ```
-
-Once your gadget is set up, 🕵️‍♂️ rendezvous with your bot on Telegram.
+Once it's up, proceed to add or refine your bot's business logic as required.
 
 ### 4. Running the Bot Locally 🏠
 
@@ -43,8 +42,7 @@ Ignite your local agent with:
 ```bash
 run_bot.sh --no-autoreload
 ```
-
-Once it's up, proceed to add or refine your bot's business logic as required.
+Once your gadget is set up, 🕵️‍♂️ rendezvous with your bot on Telegram.
 
 ### 5. Deploying the Bot for Your Next Mission 🌍
 

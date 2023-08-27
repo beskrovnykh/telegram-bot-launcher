@@ -1,57 +1,76 @@
-## Telegram Bot Launcher
+## Telegram Bot Launcher: Setting Up and Deploying Your Telegram Bot 🚀
 
-### Введение
+### Introduction 🕵️‍♂️
 
-Этот инструмент создан для упрощения разработки Telegram-ботов на платформе Chalice от AWS. Основная задача этого инструмента - упростить локальную разработку и тестирование бота, обеспечивая автоматическую настройку вебхуков и туннелирование через ngrok, чтобы удовлетворить требования Telegram к использованию HTTPS.
+### 1. Configuring AWS Locally 🛠
 
+**Using Configuration Files**:
 
-### Какие проблемы решает?
+- Go to the secret vault, typically located at `~/.aws/`.
 
-Требование HTTPS для вебхуков: Telegram требует, чтобы вебхуки работали только через HTTPS. Это может создать определнные трудности. Вручную настроить туннелирование с помощью инструментов вроде ngrok может быть неудобно, особенно если это нужно делать постоянно и постоянно переключаться между удаленной и локальной разработкой. Этот инструмент автоматизирует вышеуказанный процесс, позволяя разработчику сфокусироваться на создании бизнес-логики бота и не отвлекаться на рутину.
+- Make sure your configuration, `config`, contains the following:
 
-### Требования
+    ```text
+    [default]
+    aws_access_key_id=YOUR_SECRET_ACCESS_KEY
+    aws_secret_access_key=YOUR_EVEN_MORE_SECRET_KEY
+    region=YOUR_PREFERRED_REGION
+    ```
 
-- Установленный [ngrok](https://ngrok.com/).
-- Наличие конфигурационного файла `chalice` (`.chalice/config.json`), содержащего ключ `TELEGRAM_BOT_ID`
+Replace the placeholders with your actual AWS credentials.
 
+### 2. Generating a New Project on Your Laptop 💻
+
+Unleash your next big spy gadget (project) using:
+
+```bash
+setup_project.sh "agent-007" "<TELEGRAM_BOT_TOKEN>" --dependencies <DEPENDENCY_1> <DEPENDENCY_2> ...
 ```
+
+Once your gadget is set up, 🕵️‍♂️ rendezvous with your bot on Telegram.
+
+### 3. Running the Bot Locally 🏠
+
+Ignite your local agent with:
+
+```bash
+run_bot.sh --no-autoreload
+```
+
+Once it's up, 🎩 rendezvous once more on Telegram for some action.
+
+### 4. Deploying the Bot for Your Next Mission 🌍
+
+Before you go live, double-check the blueprints (Chalice settings) for the `TELEGRAM_BOT_ID` parameter. Don't get caught off-guard!
+
+```json
 {
   "version": "2.0",
-  ...
+  "app_name": "agent-007",
   "stages": {
-    "local": {
-      ...
-      "environment_variables": {
-        "TELEGRAM_BOT_ID": "your_bot_id",
-        ...
-      }
-    },
     "dev": {
-      ...
+      "iam_policy_file": "dev-policy.json",
+      "api_gateway_stage": "api",
+      "autogen_policy": false,
+      "environment_variables": {
+        "TELEGRAM_BOT_ID": "6226443559:AAHtj3nUCpR89LWyKe2OWaTF3zXvtHCeeEQ"
+      }
     }
   }
 }
 
 ```
 
-
-
-### Структура проекта
-
-- `bot_launcher.py`: Основной скрипт для запуска бота.
-- `ngrok_wrapper.py`: Утилиты для работы с ngrok.
-- `run_bot.sh`: Bash-скрипт для упрощения запуска.
-
-### Примеры использования
+Deploy using:
 
 ```bash
-# Запуск бота с параметрами по умолчанию
-run_bot
-
-# Запуск бота с указанием конкретного виртуального окружения и отключением автоперезагрузки
-run_bot --venv .venv2 --no-autoreload
-
-# Запуск бота для боевой стадии
-run_bot --stage production
+deploy_bot.sh
 ```
 
+Celebrate with your bot on Telegram post-deployment! 🎉
+
+---
+💌 Feedback and Questions
+
+Loved the tool? Encountered a hiccup? Or simply got a suggestion? We're all ears.
+Shoot an email to andrew173139@gmail.com and let's chat!

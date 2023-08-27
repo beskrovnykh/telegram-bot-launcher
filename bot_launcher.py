@@ -156,3 +156,5 @@ if __name__ == "__main__":
 
     # Parse arguments and launch the bot
     args = parser.parse_args()
+
+    launch_bot(args.port, args.stage, args.venv, args.no_autoreload)

@@ -37,7 +37,7 @@ Ignite your local agent with:
 run_bot.sh --no-autoreload
 ```
 
-Once it's up, 🎩 rendezvous once more on Telegram for some action.
+Once it's up, proceed to add or refine your bot's business logic as required.
 
 ### 4. Deploying the Bot for Your Next Mission 🌍
 

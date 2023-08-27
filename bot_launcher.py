@@ -15,17 +15,17 @@ from ngrok_wrapper import check_ngrok_installed
 
 def get_bot_token_from_config(stage="local"):
     """
-    Получает токен бота из конфигурации Chalice для указанной стадии.
+    Gets the bot token from the Chalice configuration for the specified stage.
 
     Args:
-        stage (str, optional): Стадия, для которой нужно получить токен. По умолчанию "local".
+        stage (str, optional): The stage for which to retrieve the bot token. Default is "local".
 
     Returns:
-        str: Токен бота для указанной стадии.
+        str: The bot token for the specified stage.
     """
     config_path = '.chalice/config.json'
     
-    # Проверка существования файла конфигурации
+    # Check if the configuration file exists
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Chalice configuration file '{config_path}' not found.")
     
@@ -35,7 +35,7 @@ def get_bot_token_from_config(stage="local"):
         except json.JSONDecodeError:
             raise ValueError(f"Error decoding JSON from {config_path}")
 
-    # Проверка наличия необходимых ключей в конфигурации
+    # Check for the presence of required keys in the configuration
     if "stages" not in config:
         raise KeyError("Key 'stages' not found in Chalice configuration.")
     if stage not in config["stages"]:
@@ -50,20 +50,21 @@ def get_bot_token_from_config(stage="local"):
 
 def set_telegram_webhook(telegram_bot_id, webhook_url):
     """
-    Устанавливает вебхук для Telegram бота.
+    Sets the webhook for the Telegram bot.
 
     Args:
-        telegram_bot_id (str): ID бота Telegram.
-        webhook_url (str): URL вебхука, который нужно установить.
+        telegram_bot_id (str): The Telegram bot's ID.
+        webhook_url (str): The URL of the webhook to set.
 
     Returns:
-        dict: Ответ от Telegram API после установки вебхука.
+        dict: The response from the Telegram API after setting the webhook.
     """
+
     url = f"https://api.telegram.org/bot{telegram_bot_id}/setWebhook"
     data = json.dumps({"url": webhook_url}).encode('utf-8')
     headers = {
         "Content-Type": "application/json",
-        "User-Agent": "Python-urllib/3.x"  # Некоторые сервисы блокируют запросы без User-Agent, поэтому добавим его
+        "User-Agent": "Python-urllib/3.x" # Some services block requests without User-Agent, so we add it
     }
 
     request = urllib.request.Request(url, data=data, headers=headers, method="POST")
@@ -72,7 +73,7 @@ def set_telegram_webhook(telegram_bot_id, webhook_url):
         with urllib.request.urlopen(request) as response:
             response_data = json.loads(response.read().decode())
 
-            # Проверка ответа от Telegram API
+            # Check Telegram API response
             if response_data.get('ok'):
                 print("Webhook successfully set!")
             else:
@@ -87,13 +88,14 @@ def set_telegram_webhook(telegram_bot_id, webhook_url):
 def launch_bot(port, stage, venv_path, no_autoreload):
 
     """
-    Запускает бота локально, используя ngrok для обработки вебхуков из Telegram.
+    Launches the bot locally using ngrok to handle webhooks from Telegram.
 
-    :param port: Порт, на котором будет запущен локальный сервер Chalice.
-    :param stage: Стадия разработки (обычно "local" или "prod").
-    :param venv_path: Путь к виртуальной среде Python.
-    :param no_autoreload: Если True, то сервер Chalice не будет автоматически перезагружаться при изменении кода.
+    :param port: The port on which the local Chalice server will be running.
+    :param stage: The development stage (usually "local" or "prod").
+    :param venv_path: The path to the Python virtual environment.
+    :param no_autoreload: If True, the Chalice server will not automatically reload on code changes.
     """
+
 
     def stop_server(signum, frame):
         if server_process:
@@ -102,17 +104,17 @@ def launch_bot(port, stage, venv_path, no_autoreload):
     
     signal.signal(signal.SIGINT, stop_server)
     signal.signal(signal.SIGTERM, stop_server)
-    # Запускаем ngrok
+    # Start ngrok
     ngrok_url = start_ngrok(port)
     if not ngrok_url:
         print("Failed to start ngrok.")
     else:
         print(f"Ngrok URL: {ngrok_url}")
 
-    # Устанавливаем переменные окружения
+    # Set environment variables
     os.environ["WEBHOOK_BASE_URL"] = ngrok_url
 
-    # Запускаем chalice local
+    # Launch Chalice locally
     activate_venv_cmd = f"source {venv_path}/bin/activate"
     chalice_cmd = f"chalice local --port {port} --stage {stage}"
 
@@ -134,26 +136,25 @@ def launch_bot(port, stage, venv_path, no_autoreload):
 
 if __name__ == "__main__":
 
-    # Проверка на наличие установленного ngrok
+    # Check for the presence of installed ngrok
     if not check_ngrok_installed():
-        print("Error: ngrok не установлен. Установите ngrok для продолжения.")
+        print("Error: ngrok is not installed. Install ngrok to proceed.")
         exit(1)
 
-    # Инициализация парсера аргументов
+    # Initialize argument parser
     parser = argparse.ArgumentParser(description="Launch bot with ngrok.")
 
-    # Порт, на котором запущено приложение Chalice
+    # Port on which the Chalice application is running
     parser.add_argument('--port', type=int, default=8000, help="The port on which the Chalice app is running.")
 
-    # Стадия Chalice для использования (например, "local", "dev", "prod")
+    # Chalice stage to use (e.g., "local", "dev", "prod")
     parser.add_argument('--stage', default="local", help="The stage for Chalice to use.")
 
-    # Путь к виртуальному окружению Python
+    # Path to Python virtual environment
     parser.add_argument('--venv', default=".venv", help="Path to the virtual environment.")
 
-    # Отключить авто-перезагрузчик в Chalice
+    # Disable auto-reloader in Chalice
     parser.add_argument('--no-autoreload', action='store_true', help="Disable the auto-reloader in Chalice.")
 
-    # Разбор аргументов и запуск бота
+    # Parse arguments and launch the bot
     args = parser.parse_args()
-    launch_bot(args.port, args.stage, args.venv, args.no_autoreload)

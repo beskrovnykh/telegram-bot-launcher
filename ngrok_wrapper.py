@@ -7,7 +7,21 @@ import argparse
 ngrok_process = None  # глобальная переменная для хранения экземпляра процесса ngrok
 
 
+def check_ngrok_installed():
+    """
+    Check if ngrok is installed on the system.
+    """
+    try:
+        subprocess.run(["ngrok", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except FileNotFoundError:
+        return False
+    return True
+
+
 def get_ngrok_url():
+    """
+    Retrieve the public URL from the ngrok API.
+    """
     try:
         response = subprocess.check_output(['curl', '-s', 'http://localhost:4040/api/tunnels'])
         json_data = json.loads(response.decode('utf-8'))
@@ -17,6 +31,9 @@ def get_ngrok_url():
         return None
 
 def start_ngrok(port):
+    """
+    Start ngrok for the given port.
+    """
     global ngrok_process
     if ngrok_process:
         print("Ngrok is already running.")
@@ -33,6 +50,7 @@ def stop_ngrok():
     print("Ngrok stopped.")
 
 if __name__ == "__main__":
+    # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Manage ngrok process.")
     parser.add_argument('action', choices=['start', 'stop', 'get-url'], help="Action to perform: start, stop, or retrieve ngrok URL.")
     parser.add_argument('--port', type=int, default=8000, help="The port on which the Chalice app is running.")
